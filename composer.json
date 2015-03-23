@@ -1,6 +1,6 @@
 {
 	"name": "jstewmc/stream",
-	"description": "Stream a very large text file or string",
+	"description": "Stream a very large text file or string character-by-character",
 	"license": "MIT",
 	"keywords": ["PHP", "stream", "split", "file", "string", "character"],
 	"authors": [

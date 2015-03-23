@@ -1,6 +1,6 @@
 # Stream
 
-Stream a very large text file or string.
+Stream a very large text file or string character-or-character.
 
 For example:
 
@@ -30,7 +30,7 @@ o
 o
 ```
 
-Of course, this example is trivial. However, storing the entire contents of very large files or very large strings is memory intensive. With the `Stream` class, you can loop through a file or string character-by-character with a much smaller memory footprint.
+Of course, this example is trivial. However, storing the entire contents of very large files or very large strings in memory is a heavy load. With the `Stream` class, you can loop through a file or string character-by-character with a much smaller memory footprint.
 
 ## Methodology
 
