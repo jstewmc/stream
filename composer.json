@@ -1,0 +1,21 @@
+{
+	"name": "jstewmc/stream",
+	"description": "Stream a text file character-by-character",
+	"license": "MIT",
+	"keywords": ["PHP", "stream", "file", "characters"],
+	"authors": [
+		{
+			"name": "Jack Clayton",
+			"email": "clayjs0@gmail.com"	
+		}
+	],
+	"require": {},
+	"require-dev": {
+		"phpunit/phpunit": "4.2.*"
+	},
+	"autoload": {
+		"psr-4": {
+			"Jstewmc\\Stream\\": "src/"
+		}
+	}
+}
