@@ -1,6 +1,6 @@
 # Stream
 
-Stream a text file character-by-character.
+Stream a very large text file or string.
 
 For example:
 
@@ -30,13 +30,13 @@ o
 o
 ```
 
-Of course, this example is trivial. However, for very large files (on the order of several megabytes), storing the entire file's contents in memory as a string or as an array can be memory intensive. With the `Stream` class, you can loop through the file character-by-character.
+Of course, this example is trivial. However, storing the entire contents of very large files or very large strings is memory intensive. With the `Stream` class, you can loop through a file or string character-by-character with a much smaller memory footprint.
 
 ## Methodology
 
-Basically, this library divides very large text files into chunks. As you move character-to-character, it get and splits the next or previous chunk in the background as needed.
+Basically, this library divides very large text files and very large strings into chunks. As you move character-to-character, it get and splits the next or previous chunk in the background as needed.
 
-## Methods
+## Files
 
 You can set the file's name via the constructor or the `setName()` method:
 
@@ -53,7 +53,24 @@ $a == $b;  // returns true
 
 Keep in mind, however you set the file's name, the file must exist and be readable. Otherwise, an `InvalidArgumentException` will be thrown.
 
-You can get the file's current, next, and previous characters:
+## Text
+
+You can set the text via the constructor or the `setText()` method:
+
+```php
+use Jstewmc\Stream;
+
+$a = new Text('foo');
+
+$b = new Text();
+$b->setText('foo');
+
+$a == $b;  // returns true
+```
+
+## Methods
+
+You can get the stream's current, next, and previous characters:
 
 ```php
 use Jstewmc\Stream;
@@ -76,9 +93,7 @@ If needed, you can reset the stream's internal pointer:
 ```php
 use Jstewmc\Stream;
 
-file_put_contents('path\to\file.txt', 'foo');
-
-$stream = new File('path\to\file.txt');
+$stream = new Text('foo');
 
 $stream->getCurrentCharacter();  // returns "f"
 $stream->getNextCharacter();     // returns "o"
