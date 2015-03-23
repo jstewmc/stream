@@ -1,6 +1,6 @@
 # Stream
 
-Stream a very large text file or string character-or-character.
+Stream a very large text file or string character-by-character.
 
 For example:
 
@@ -8,10 +8,10 @@ For example:
 use Jstewmc\Stream;
 
 // create a trivial text file
-file_put_contents('path\to\file.txt', 'foo');
+file_put_contents('/path/to/file.txt', 'foo');
 
 // create a new stream
-$stream = new File('path\to\file.txt');
+$stream = new File('/path/to/file.txt');
 
 // while a current character exists
 while ($stream->getCurrentCharacter()) {
@@ -30,7 +30,7 @@ o
 o
 ```
 
-Of course, this example is trivial. However, storing the entire contents of very large files or very large strings in memory is a heavy load. With the `Stream` class, you can loop through a file or string character-by-character with a much smaller memory footprint.
+Of course, this example is trivial. However, storing the entire contents of very large files or very large strings in memory can be a heavy load. With the `Stream` class, you can loop through a file or string character-by-character with a much smaller memory footprint.
 
 ## Methodology
 
@@ -43,10 +43,10 @@ You can set the file's name via the constructor or the `setName()` method:
 ```php
 use Jstewmc\Stream;
 
-$a = new File('path\to\file.txt');
+$a = new File('/path/to/file.txt');
 
 $b = new File();
-$b->setName('path\to\file.txt');
+$b->setName('/path/to/file.txt');
 
 $a == $b;  // returns true
 ```
@@ -75,9 +75,9 @@ You can get the stream's current, next, and previous characters:
 ```php
 use Jstewmc\Stream;
 
-file_put_contents('path\to\file.txt', 'foo');
+file_put_contents('/path/to/file.txt', 'foo');
 
-$stream = new File('path\to\file.txt');
+$stream = new File('/path/to/file.txt');
 
 $stream->getCurrentCharacter();   // returns "f"
 $stream->getNextCharacter();      // returns "o"
@@ -86,7 +86,7 @@ $stream->getPreviousCharacter();  // returns "f"
 
 The `getNextCharacter()` and `getPreviousCharacter()` methods behave like PHP's native `next()` and `prev()` methods. When called, they'll increment or decrement the internal pointer and return the corresponding character.
 
-For convenience, the `getCurrentCharacter()`, `getNextCharacter()`, and `getPreviousCharacter()` methods are aliased as `current()`, `next()`, and `previous()`, respectively.
+For convenience, the `getCurrentCharacter()`, `getNextCharacter()`, and `getPreviousCharacter()` methods are aliased as the `current()`, `next()`, and `previous()` methods, respectively.
 
 If needed, you can reset the stream's internal pointer:
 
