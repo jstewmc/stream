@@ -16,7 +16,7 @@ $stream = new File('path\to\file.txt');
 // while a current character exists
 while ($stream->getCurrentCharacter()) {
 	// echo the current character to the screen
-	echo "\"$stream->getCurrentCharacter()\""."\n";	
+	echo $stream->getCurrentCharacter()."\n";	
 	// advance to the next character
 	$stream->getNextCharacter();
 }
@@ -25,9 +25,9 @@ while ($stream->getCurrentCharacter()) {
 The example above would produce the following output:
 
 ```
-"f"
-"o"
-"o"
+f
+o
+o
 ```
 
 Of course, this example is trivial. However, for very large files (on the order of several megabytes), storing the entire file's contents in memory as a string or as an array can be memory intensive. With the `Stream` class, you can loop through the file character-by-character.
@@ -69,7 +69,9 @@ $stream->getPreviousCharacter();  // returns "f"
 
 The `getNextCharacter()` and `getPreviousCharacter()` methods behave like PHP's native `next()` and `prev()` methods. When called, they'll increment or decrement the internal pointer and return the corresponding character.
 
-You can reset the stream's internal pointer:
+For convenience, the `getCurrentCharacter()`, `getNextCharacter()`, and `getPreviousCharacter()` methods are aliased as `current()`, `next()`, and `previous()`, respectively.
+
+If needed, you can reset the stream's internal pointer:
 
 ```php
 use Jstewmc\Stream;
@@ -85,8 +87,6 @@ $stream->reset();
 
 $stream->getCurrentCharacter();  // returns "f"
 ```
-
-The `getCurrentCharacter()`, `getNextCharacter()`, and `getPreviousCharacter()` methods are aliased for convenience as `current()`, `next()`, and `previous()`, respectively.
 
 ## About
 
