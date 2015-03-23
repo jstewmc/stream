@@ -230,7 +230,7 @@ abstract class Stream
 	 * @return  string|null
 	 * @since   0.1.0
 	 */
-	public function prev()
+	public function previous()
 	{
 		return $this->getPreviousCharacter();
 	}

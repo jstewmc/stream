@@ -86,6 +86,8 @@ $stream->reset();
 $stream->getCurrentCharacter();  // returns "f"
 ```
 
+The `getCurrentCharacter()`, `getNextCharacter()`, and `getPreviousCharacter()` methods are aliased for convenience as `current()`, `next()`, and `previous()`, respectively.
+
 ## About
 
 In February 2015, I wrote a library to [read and write RTF files](https://github.com/jstewmc/rtf). Unfortunately, I soon realized that some RTF files can be very large, too large to get and split as one string.
