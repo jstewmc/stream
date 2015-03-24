@@ -152,7 +152,7 @@ abstract class Stream
 	/**
 	 * An alias for the getCurrentCharacter() method
 	 *
-	 * @return  string|null
+	 * @return  string|false
 	 * @since   0.1.0
 	 */
 	public function current()
@@ -216,7 +216,7 @@ abstract class Stream
 	/**
 	 * An alias for the getNextCharacter() method
 	 *
-	 * @return  string|null
+	 * @return  string|false
 	 * @since   0.1.0
 	 */
 	public function next()
@@ -227,7 +227,7 @@ abstract class Stream
 	/**
 	 * An alias for the getPreviousCharacter() method
 	 *
-	 * @return  string|null
+	 * @return  string|false
 	 * @since   0.1.0
 	 */
 	public function previous()
