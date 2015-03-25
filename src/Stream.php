@@ -14,8 +14,8 @@ namespace Jstewmc\Stream;
  *
  * The Stream class allows you treat the contents of files and strings as a
  * continuous flow of characters. That is, you can iterate over the characters 
- * in a very large file or string without holding the contents of the file as an 
- * array in memory.
+ * in a very large file or string without holding the contents of the file as 
+ * an array in memory.
  *
  * @since  0.1.0
  */
@@ -183,11 +183,13 @@ abstract class Stream
 	{
 		$this->beforeGet();
 	
-		if ( ! $this->hasNextCharacter()) {
+		if ($this->hasNextCharacter()) {
+			$next = next($this->characters);
+		} elseif ($this->hasNextChunk()) {
 			$this->readNextChunk();
 			$next = reset($this->characters);
 		} else {
-			$next = next($this->characters);
+			$next = false;
 		}
 		
 		return $next;
@@ -203,14 +205,44 @@ abstract class Stream
 	{
 		$this->beforeGet();
 		
-		if ( ! $this->hasPreviousCharacter()) {
+		if ($this->hasPreviousCharacter()) {
+			$previous = prev($this->characters);
+		} elseif ($this->hasPreviousChunk()) {
 			$this->readPreviousChunk();
 			$previous = end($this->characters);
 		} else {
-			$previous = prev($this->characters);
+			$previous = false;
 		}
 		
 		return $previous;
+	}
+	
+	/**
+	 * Returns true if the stream's pointer is on or before the stream's first character
+	 *
+	 * @return  bool
+	 * @since  0.1.0
+	 */
+	public function isBeginning()
+	{
+		$this->beforeGet();
+		
+		return ! $this->hasPreviousCharacter() && ! $this->hasPreviousChunk();
+	}
+	
+	/**
+	 * Returns true if the stream's pointer is beyond the stream's last character
+	 *
+	 * @return  bool
+	 * @since  0.1.0
+	 */
+	public function isEnd()
+	{
+		$this->beforeGet();
+		
+		return is_array($this->characters) 
+			&& key($this->characters) === null 
+			&& ! $this->hasNextChunk();
 	}
 	
 	/**
@@ -236,7 +268,7 @@ abstract class Stream
 	}
 	
 	/**
-	 * Resets the streams internal pointer
+	 * Resets the stream's internal pointer
 	 *
 	 * @return  void
 	 * @since  0.1.0
@@ -253,12 +285,21 @@ abstract class Stream
 	/* !Protected methods */
 	
 	/**
+	 * Returns the max number of chunks in the stream
+	 *
+	 * @return  int
+	 * @since  0.1.0
+	 */
+	abstract protected function getMaxChunks();
+	
+	/**
 	 * Called before getting a character
 	 *
 	 * On the first call to a getXCharacter() method, the $characters array will be 
 	 * null, and I'll initialize it to the first chunk.
 	 * 
 	 * @return  void
+	 * @since  0.1.0
 	 */
 	protected function beforeGet()
 	{
@@ -277,8 +318,20 @@ abstract class Stream
 	 */
 	protected function hasNextCharacter()
 	{
-		return key($this->characters) !== null 
+		return is_array($this->characters) 
+			&& key($this->characters) !== null 
 			&& array_key_exists(key($this->characters) + 1, $this->characters);
+	}
+	
+	/**
+	 * Returns true if a next chunk exists in the stream's source
+	 *
+	 * @return  bool
+	 * @since  0.1.0
+	 */
+	protected function hasNextChunk()
+	{
+		return $this->chunkIndex + 1 <= $this->getMaxChunks();
 	}
 	
 	/**
@@ -289,8 +342,20 @@ abstract class Stream
 	 */
 	protected function hasPreviousCharacter()
 	{
-		return key($this->characters) !== null 
+		return is_array($this->characters)
+			&& key($this->characters) !== null 
 			&& array_key_exists(key($this->characters) - 1, $this->characters);
+	}
+	
+	/**
+	 * Returns true if a previous chunk exists in the stream's source
+	 *
+	 * @return  bool
+	 * @since  0.1.0
+	 */
+	protected function hasPreviousChunk()
+	{
+		return $this->chunkIndex - 1 >= 0;
 	}
 	
 	/**

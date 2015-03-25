@@ -89,9 +89,28 @@ class File extends Stream
 	/* !Protected methods */
 	
 	/**
+	 * Returns the maximum number of chunks in the file (inclusive)
+	 *
+	 * @return  int
+	 * @throws  BadMethodCallException  if $name property is null
+	 * @since  0.1.0
+	 */
+	protected function getMaxChunks()
+	{
+		if ($this->name === null) {
+			throw new \BadMethodCallException(
+				__METHOD__."() expects proprety 'name' to be set"
+			);
+		}
+		
+		return ceil(filesize($this->name) / $this->chunkSize);
+	}
+	
+	/**
 	 * Reads the current chunk's characters
 	 *
 	 * @return  void
+	 * @throws  BadMethodCallException  if $name property is null
 	 * @since   0.1.0
 	 */
 	protected function readCurrentChunk()
@@ -119,6 +138,7 @@ class File extends Stream
 	 * Reads the next chunk's characters
 	 *
 	 * @return  void
+	 * @throws  BadMethodCallException  if $name property is null
 	 * @since   0.1.0
 	 */
 	protected function readNextChunk()
@@ -149,6 +169,7 @@ class File extends Stream
 	 * Reads the previous chunk's characters
 	 * 
 	 * @return  void
+	 * @throws  BadMethodCallException  if $name property is null
 	 * @since  0.1.0
 	 */
 	protected function readPreviousChunk()

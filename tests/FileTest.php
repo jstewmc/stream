@@ -517,6 +517,139 @@ class FileTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	
+	/* !isBeginning() */
+	
+	/**
+	 * isBeginning() should return true if file is empty
+	 */
+	public function testIsBeginning_returnsTrue_ifFileIsEmpty()
+	{
+		$stream = new File($this->fileIsEmpty);
+		
+		$this->assertTrue($stream->isBeginning());
+		
+		return;
+	}
+	
+	/**
+	 * isBeginning() should return true if before first character
+	 */
+	public function testIsBeginning_returnsTrue_ifBeforeFirstCharacter()
+	{
+		$stream = new File($this->fileIsNotEmpty);
+		
+		$this->assertTrue($stream->isBeginning());
+		
+		return;
+	}
+	
+	/**
+	 * isBeginning() should return true if on first character
+	 */
+	public function testIsBeginning_returnsTrue_ifOnFirstCharacter()
+	{
+		$stream = new File($this->fileIsNotEmpty);
+		
+		$stream->current();
+		
+		$this->assertTrue($stream->isBeginning());
+		
+		return;
+	}
+	
+	/**
+	 * isBeginning() should return false if after first character
+	 */
+	public function testIsBeginning_returnsFalse_ifAfterFirstCharacter()
+	{
+		$stream = new File($this->fileIsNotEmpty);
+		
+		$stream->next();
+		
+		$this->assertFalse($stream->isBeginning());
+		
+		return;
+	}
+	
+	
+	/* !isEnd() */
+	
+	/**
+	 * isEnd() should throw a BadMethodCallException if $name is not set
+	 */
+	public function testIsEnd_throwsBadMethodCallException_ifNameIsNotSet()
+	{
+		$this->setExpectedException('BadMethodCallException');
+		
+		$stream = new File();
+		
+		$stream->isEnd();
+		
+		return;
+	}
+	
+	/**
+	 * isEnd() should return true if the file is empty
+	 */
+	public function testIsEnd_returnsTrue_ifFileIsEmpty()
+	{
+		$stream = new File($this->fileIsEmpty);
+		
+		$this->assertTrue($stream->isEnd());
+		
+		return;
+	}
+	
+	/**
+	 * isEnd() should return false if before last character
+	 */
+	public function testIsEnd_returnsFalse_ifBeforeLastCharacter()
+	{
+		$stream = new File($this->fileIsNotEmpty);
+		
+		$stream->next();
+		
+		$this->assertFalse($stream->isEnd());
+		
+		return;
+	}
+	
+	/**
+	 * isEnd() should return false if on last character
+	 */
+	public function testIsEnd_returnsTrue_ifOnLastCharacter()
+	{
+		$stream = new File($this->fileIsNotEmpty);
+		
+		$characters = str_split('foo bar baz');
+		end($characters);
+		
+		$stream->setCharacters($characters);
+		
+		$this->assertFalse($stream->isEnd());
+		
+		return;
+	}
+	
+	/**
+	 * isEnd() should return true if after last character
+	 */
+	public function testIsEnd_returnsTrue_ifAfterLastCharacter()
+	{
+		$stream = new File($this->fileIsNotEmpty);
+		
+		$characters = str_split('foo bar baz');
+		end($characters);
+		
+		$stream->setCharacters($characters);
+		$stream->next();
+		
+		$this->assertTrue($stream->isEnd());
+		
+		return;
+	}
+	
+	
 	/* !reset() */
 	
 	/**

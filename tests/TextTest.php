@@ -331,6 +331,121 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	
+	/* !isBeginning() */
+	
+	/**
+	 * isBeginning() should return true if text is empty
+	 */
+	public function testIsBeginning_returnsTrue_ifTextIsEmpty()
+	{
+		$stream = new Text();
+		
+		$this->assertTrue($stream->isBeginning());
+		
+		return;
+	}
+	
+	/**
+	 * isBeginning() should return true if before first character
+	 */
+	public function testIsBeginning_returnsTrue_ifBeforeFirstCharacter()
+	{
+		$stream = new Text('foo');
+		
+		$this->assertTrue($stream->isBeginning());
+		
+		return;
+	}
+	
+	/**
+	 * isBeginning() should return true if on first character
+	 */
+	public function testIsBeginning_returnsTrue_ifOnFirstCharacter()
+	{
+		$stream = new Text('foo');
+		
+		$stream->current();
+		
+		$this->assertTrue($stream->isBeginning());
+		
+		return;
+	}
+	
+	/**
+	 * isBeginning() should return false if after first character
+	 */
+	public function testIsBeginning_returnsFalse_ifAfterFirstCharacter()
+	{
+		$stream = new Text('foo');
+		
+		$stream->next();
+		
+		$this->assertFalse($stream->isBeginning());
+		
+		return;
+	}
+	
+	
+	/* !isEnd() */
+	
+	/**
+	 * isEnd() should return true if the string is empty
+	 */
+	public function testIsEnd_returnsTrue_ifTextIsEmpty()
+	{
+		$stream = new Text();
+		
+		$this->assertTrue($stream->isEnd());
+		
+		return;
+	}
+	
+	/**
+	 * isEnd() should return false if before last character
+	 */
+	public function testIsEnd_returnsFalse_ifBeforeLastCharacter()
+	{
+		$stream = new Text('foo');
+		
+		$stream->next();
+		
+		$this->assertFalse($stream->isEnd());
+		
+		return;
+	}
+	
+	/**
+	 * isEnd() should return false if on last character
+	 */
+	public function testIsEnd_returnsTrue_ifOnLastCharacter()
+	{
+		$stream = new Text('foo');
+		
+		$stream->next();
+		$stream->next();
+		
+		$this->assertFalse($stream->isEnd());
+		
+		return;
+	}
+	
+	/**
+	 * isEnd() should return true if after last character
+	 */
+	public function testIsEnd_returnsTrue_ifAfterLastCharacter()
+	{
+		$stream = new Text('foo');
+		
+		$stream->next();
+		$stream->next();
+		$stream->next();
+		
+		$this->assertTrue($stream->isEnd());
+		
+		return;
+	}
+	
+	
 	/* !reset() */
 	
 	/**

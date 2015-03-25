@@ -86,6 +86,17 @@ class Text extends Stream
 	/* !Protected methods */
 	
 	/**
+	 * Returns the maximum number of chunks in the string (inclusive)
+	 *
+	 * @return  int
+	 * @since  0.1.0
+	 */
+	protected function getMaxChunks()
+	{
+		return ceil(strlen($this->text) / $this->chunkSize);
+	}
+	
+	/**
 	 * Reads the current chunk
 	 *
 	 * @return  void
