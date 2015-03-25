@@ -14,11 +14,11 @@ file_put_contents('/path/to/file.txt', 'foo');
 $stream = new File('/path/to/file.txt');
 
 // while a current character exists
-while ($stream->getCurrentCharacter()) {
+while ($stream->current()) {
 	// echo the current character to the screen
-	echo $stream->getCurrentCharacter()."\n";	
+	echo $stream->current()."\n";	
 	// advance to the next character
-	$stream->getNextCharacter();
+	$stream->next();
 }
 ```
 
@@ -38,7 +38,7 @@ Basically, this library divides very large text files and very large strings int
 
 ## Files
 
-You can set the file's name via the constructor or the `setName()` method:
+With a File stream, you can set the file's name via the constructor or the `setName()` method:
 
 ```php
 use Jstewmc\Stream;
@@ -55,7 +55,7 @@ Keep in mind, however you set the file's name, the file must exist and be readab
 
 ## Text
 
-You can set the text via the constructor or the `setText()` method:
+With a Text stream, you can set the text via the constructor or the `setText()` method:
 
 ```php
 use Jstewmc\Stream;
@@ -70,7 +70,7 @@ $a == $b;  // returns true
 
 ## Methods
 
-You can get the stream's current, next, and previous characters:
+With either a File or Text stream, you can get the stream's current, next, and previous characters:
 
 ```php
 use Jstewmc\Stream;
