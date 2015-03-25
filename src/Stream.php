@@ -231,7 +231,7 @@ abstract class Stream
 	}
 	
 	/**
-	 * Returns true if the stream's pointer is beyond the stream's last character
+	 * Returns true if the stream's pointer is after the stream's last character
 	 *
 	 * @return  bool
 	 * @since  0.1.0
