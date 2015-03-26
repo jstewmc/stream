@@ -350,7 +350,13 @@ abstract class Stream
 	 */
 	protected function readChunk($chunk)
 	{
-		if (is_string($chunk) && ! empty($chunk)) {
+		// don't allow an empty string (''); otherwise, PHP's str_split() will split it
+		//     into an array with one element, an empty string (e.g., ['']), and this
+		//     will create errors later on; however, don't use PHP's native empty() 
+		//     method here either, empty() will consider "0" an empty string, and it's 
+		//     a valid value
+		//
+		if (is_string($chunk) && strlen($chunk) > 0) {
 			$this->characters = str_split($chunk);
 		} else {
 			$this->characters = [];

@@ -199,6 +199,18 @@ class TextTest extends \PHPUnit_Framework_TestCase
 		return;
 	}
 	
+	/**
+	 * getCurrentCharacter() should return string if character evaluates to empty
+	 */
+	public function testGetCharacter_returnsString_ifCharacterEvaluatesEmpty()
+	{
+		$stream = new Text('0');
+		
+		$this->assertEquals('0', $stream->getCurrentCharacter());
+		
+		return;
+	}
+	
 
 	/* !getNextCharacter() */
 	
