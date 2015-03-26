@@ -331,116 +331,63 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	
-	/* !isBeginning() */
+	/* !hasCharacter() */
 	
 	/**
-	 * isBeginning() should return true if text is empty
+	 * hasCharacter() should return false if the file is empty
 	 */
-	public function testIsBeginning_returnsTrue_ifTextIsEmpty()
+	public function testHasCharacter_returnsFalse_ifFileIsEmpty()
 	{
 		$stream = new Text();
 		
-		$this->assertTrue($stream->isBeginning());
+		$this->assertFalse($stream->hasCharacter());
 		
 		return;
 	}
 	
 	/**
-	 * isBeginning() should return true if before first character
+	 * hasCharacter() should return true if stream is before last character
 	 */
-	public function testIsBeginning_returnsTrue_ifBeforeFirstCharacter()
+	public function testHasCharacter_returnsTrue_ifBeforeLastCharacter()
 	{
 		$stream = new Text('foo');
 		
-		$this->assertTrue($stream->isBeginning());
+		$this->assertTrue($stream->hasCharacter());
 		
 		return;
 	}
 	
 	/**
-	 * isBeginning() should return true if on first character
+	 * hasCharacter() should return true if stream is on last character
 	 */
-	public function testIsBeginning_returnsTrue_ifOnFirstCharacter()
+	public function testHasCharacter_returnsTrue_ifOnLastCharacter()
 	{
 		$stream = new Text('foo');
 		
-		$stream->current();
+		$characters = str_split('foo');
+		end($characters);
 		
-		$this->assertTrue($stream->isBeginning());
+		$stream->setCharacters($characters);
+		
+		$this->assertTrue($stream->hasCharacter());
 		
 		return;
 	}
 	
 	/**
-	 * isBeginning() should return false if after first character
+	 * hasCharacter() should return false if stream is after last character
 	 */
-	public function testIsBeginning_returnsFalse_ifAfterFirstCharacter()
+	public function testHasCharacter_returnsFalse_ifAfterLastCharacter()
 	{
 		$stream = new Text('foo');
 		
+		$characters = str_split('foo');
+		end($characters);
+		
+		$stream->setCharacters($characters);
 		$stream->next();
 		
-		$this->assertFalse($stream->isBeginning());
-		
-		return;
-	}
-	
-	
-	/* !isEnd() */
-	
-	/**
-	 * isEnd() should return true if the string is empty
-	 */
-	public function testIsEnd_returnsTrue_ifTextIsEmpty()
-	{
-		$stream = new Text();
-		
-		$this->assertTrue($stream->isEnd());
-		
-		return;
-	}
-	
-	/**
-	 * isEnd() should return false if before last character
-	 */
-	public function testIsEnd_returnsFalse_ifBeforeLastCharacter()
-	{
-		$stream = new Text('foo');
-		
-		$stream->next();
-		
-		$this->assertFalse($stream->isEnd());
-		
-		return;
-	}
-	
-	/**
-	 * isEnd() should return false if on last character
-	 */
-	public function testIsEnd_returnsTrue_ifOnLastCharacter()
-	{
-		$stream = new Text('foo');
-		
-		$stream->next();
-		$stream->next();
-		
-		$this->assertFalse($stream->isEnd());
-		
-		return;
-	}
-	
-	/**
-	 * isEnd() should return true if after last character
-	 */
-	public function testIsEnd_returnsTrue_ifAfterLastCharacter()
-	{
-		$stream = new Text('foo');
-		
-		$stream->next();
-		$stream->next();
-		$stream->next();
-		
-		$this->assertTrue($stream->isEnd());
+		$this->assertFalse($stream->hasCharacter());
 		
 		return;
 	}

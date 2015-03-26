@@ -517,124 +517,50 @@ class FileTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	
-	/* !isBeginning() */
+	/* !hasCharacter() */
 	
 	/**
-	 * isBeginning() should return true if file is empty
+	 * hasCharacter() should throw a BadMethodCallException if $name is not set
 	 */
-	public function testIsBeginning_returnsTrue_ifFileIsEmpty()
-	{
-		$stream = new File($this->fileIsEmpty);
-		
-		$this->assertTrue($stream->isBeginning());
-		
-		return;
-	}
-	
-	/**
-	 * isBeginning() should return true if before first character
-	 */
-	public function testIsBeginning_returnsTrue_ifBeforeFirstCharacter()
-	{
-		$stream = new File($this->fileIsNotEmpty);
-		
-		$this->assertTrue($stream->isBeginning());
-		
-		return;
-	}
-	
-	/**
-	 * isBeginning() should return true if on first character
-	 */
-	public function testIsBeginning_returnsTrue_ifOnFirstCharacter()
-	{
-		$stream = new File($this->fileIsNotEmpty);
-		
-		$stream->current();
-		
-		$this->assertTrue($stream->isBeginning());
-		
-		return;
-	}
-	
-	/**
-	 * isBeginning() should return false if after first character
-	 */
-	public function testIsBeginning_returnsFalse_ifAfterFirstCharacter()
-	{
-		$stream = new File($this->fileIsNotEmpty);
-		
-		$stream->next();
-		
-		$this->assertFalse($stream->isBeginning());
-		
-		return;
-	}
-	
-	
-	/* !isEnd() */
-	
-	/**
-	 * isEnd() should throw a BadMethodCallException if $name is not set
-	 */
-	public function testIsEnd_throwsBadMethodCallException_ifNameIsNotSet()
+	public function testHasCharacter_throwsBadMethodCallException_ifNameIsNotSet()
 	{
 		$this->setExpectedException('BadMethodCallException');
 		
 		$stream = new File();
 		
-		$stream->isEnd();
+		$stream->hasCharacter();
 		
 		return;
 	}
 	
 	/**
-	 * isEnd() should return true if the file is empty
+	 * hasCharacter() should return false if the file is empty
 	 */
-	public function testIsEnd_returnsTrue_ifFileIsEmpty()
+	public function testHasCharacter_returnsFalse_ifFileIsEmpty()
 	{
 		$stream = new File($this->fileIsEmpty);
 		
-		$this->assertTrue($stream->isEnd());
+		$this->assertFalse($stream->hasCharacter());
 		
 		return;
 	}
 	
 	/**
-	 * isEnd() should return false if before last character
+	 * hasCharacter() should return true if stream is before last character
 	 */
-	public function testIsEnd_returnsFalse_ifBeforeLastCharacter()
+	public function testHasCharacter_returnsTrue_ifBeforeLastCharacter()
 	{
 		$stream = new File($this->fileIsNotEmpty);
 		
-		$stream->next();
-		
-		$this->assertFalse($stream->isEnd());
+		$this->assertTrue($stream->hasCharacter());
 		
 		return;
 	}
 	
 	/**
-	 * isEnd() should return false if on last character
+	 * hasCharacter() should return true if stream is on last character
 	 */
-	public function testIsEnd_returnsTrue_ifOnLastCharacter()
-	{
-		$stream = new File($this->fileIsNotEmpty);
-		
-		$characters = str_split('foo bar baz');
-		end($characters);
-		
-		$stream->setCharacters($characters);
-		
-		$this->assertFalse($stream->isEnd());
-		
-		return;
-	}
-	
-	/**
-	 * isEnd() should return true if after last character
-	 */
-	public function testIsEnd_returnsTrue_ifAfterLastCharacter()
+	public function testHasCharacter_returnsTrue_ifOnLastCharacter()
 	{
 		$stream = new File($this->fileIsNotEmpty);
 		
@@ -642,9 +568,26 @@ class FileTest extends \PHPUnit_Framework_TestCase
 		end($characters);
 		
 		$stream->setCharacters($characters);
+		
+		$this->assertTrue($stream->hasCharacter());
+		
+		return;
+	}
+	
+	/**
+	 * hasCharacter() should return false if stream is after last character
+	 */
+	public function testIsEnd_returnsFalse_ifAfterLastCharacter()
+	{
+		$stream = new File($this->fileIsNotEmpty);
+		
+		$characters = str_split('foo bar baz');
+		end($characters);
+		
+		$stream->setCharacters($characters);
 		$stream->next();
 		
-		$this->assertTrue($stream->isEnd());
+		$this->assertFalse($stream->hasCharacter());
 		
 		return;
 	}

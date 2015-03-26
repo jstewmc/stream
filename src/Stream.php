@@ -218,31 +218,14 @@ abstract class Stream
 	}
 	
 	/**
-	 * Returns true if the stream's pointer is on or before the stream's first character
+	 * Returns true if the stream has a character
 	 *
 	 * @return  bool
 	 * @since  0.1.0
 	 */
-	public function isBeginning()
+	public function hasCharacter()
 	{
-		$this->beforeGet();
-		
-		return ! $this->hasPreviousCharacter() && ! $this->hasPreviousChunk();
-	}
-	
-	/**
-	 * Returns true if the stream's pointer is after the stream's last character
-	 *
-	 * @return  bool
-	 * @since  0.1.0
-	 */
-	public function isEnd()
-	{
-		$this->beforeGet();
-		
-		return is_array($this->characters) 
-			&& key($this->characters) === null 
-			&& ! $this->hasNextChunk();
+		return $this->current() !== false;
 	}
 	
 	/**
