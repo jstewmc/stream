@@ -1,22 +1,28 @@
 # Stream
 
-Stream a very large text file or string character-by-character.
+Stream a very large text file or string character-by-character (multi-byte safe).
+
+>>> _Heads up!_ I went ahead and released v0.1.0 because the upcoming v0.2.0 has major changes! Instead of trying to handle both the chunking and the splitting in this class, which was becoming a headache, I moved the chunking to my [Jstewmc\Chunker](https://github.com/jstewmc/chunker) library. As a result, the Chunker is now a dependency and has to be constructor-injected into this class.
 
 For example:
 
 ```php
 use Jstewmc\Stream;
+use Jstewmc\Chunker;
 
-// create a trivial text file
-file_put_contents('/path/to/file.txt', 'foo');
+// create an example file
+file_put_contents('example.txt', 'foo');
 
-// create a new stream
-$stream = new File('/path/to/file.txt');
+// create the chunker
+$chunker = new Chunker\File('example.txt');
+
+// create the stream
+$stream = new Stream($chunker);
 
 // while a current character exists
-while ($stream->current()) {
+while (false !== ($character = $stream->current())) {
 	// echo the current character to the screen
-	echo $stream->current()."\n";	
+	echo $character."\n";	
 	// advance to the next character
 	$stream->next();
 }
@@ -30,54 +36,30 @@ o
 o
 ```
 
-Of course, this example is trivial. However, storing the entire contents of very large files or very large strings in memory can be a heavy load. With the `Stream` class, you can loop through a file or string character-by-character with a much smaller memory footprint.
+Of course, this example is trivial. But, you get the idea. The combination of the Chunker library and the Stream library allow you to loop or chunk your way through a very large file or very large string in a multi-byte safe way with ease.
 
 ## Methodology
 
-Basically, this library divides very large text files and very large strings into chunks. As you move character-to-character, it get and splits the next or previous chunk in the background as needed.
+Basically, the chunker library divides very large text files and very large strings into chunks (no surprise). As you move character-to-character in the stream, it get and splits the next or previous chunk in the background as needed.
 
-## Files
 
-With a File stream, you can set the file's name via the constructor or the `setName()` method:
+## Chunker
 
-```php
-use Jstewmc\Stream;
+To learn more about instantiating and initializing a File or Text Chunker, see [Jstewmc\Chunker](https://github.com/jstewmc/chunker).
 
-$a = new File('/path/to/file.txt');
+## Stream
 
-$b = new File();
-$b->setName('/path/to/file.txt');
-
-$a == $b;  // returns true
-```
-
-Keep in mind, however you set the file's name, the file must exist and be readable. Otherwise, an `InvalidArgumentException` will be thrown.
-
-## Text
-
-With a Text stream, you can set the text via the constructor or the `setText()` method:
+Once a stream has been instantiated, you can get the stream's current, next, and previous characters using the `getCurrentCharacter()`, `getNextCharacter()`, and `getPreviousCharacter()` methods, respectively. For convenience, the methods are aliased as `current()`, `next()`, and `previous()` methods, respectively.
 
 ```php
+use Jstewmc\Chunker;
 use Jstewmc\Stream;
 
-$a = new Text('foo');
+file_put_contents('example.txt', 'foo');
 
-$b = new Text();
-$b->setText('foo');
+$chunker = new Chunker\File('example.txt');
 
-$a == $b;  // returns true
-```
-
-## Methods
-
-With either a File or Text stream, you can get the stream's current, next, and previous characters:
-
-```php
-use Jstewmc\Stream;
-
-file_put_contents('/path/to/file.txt', 'foo');
-
-$stream = new File('/path/to/file.txt');
+$stream = new Stream($chunker);
 
 $stream->getCurrentCharacter();   // returns "f"
 $stream->getNextCharacter();      // returns "o"
@@ -86,14 +68,15 @@ $stream->getPreviousCharacter();  // returns "f"
 
 The `getNextCharacter()` and `getPreviousCharacter()` methods behave like PHP's native `next()` and `prev()` methods. When called, they'll increment or decrement the internal pointer and return the corresponding character.
 
-For convenience, the `getCurrentCharacter()`, `getNextCharacter()`, and `getPreviousCharacter()` methods are aliased as the `current()`, `next()`, and `previous()` methods, respectively.
-
-If needed, you can reset the stream's internal pointer:
+If you need to, you can reset the stream's internal pointer:
 
 ```php
+use Jstewmc\Chunker;
 use Jstewmc\Stream;
 
-$stream = new Text('foo');
+$chunker = new Chunker\Text('foo');
+
+$stream = new Stream($chunker);
 
 $stream->getCurrentCharacter();  // returns "f"
 $stream->getNextCharacter();     // returns "o"
@@ -102,14 +85,6 @@ $stream->reset();
 
 $stream->getCurrentCharacter();  // returns "f"
 ```
-
-## About
-
-In February 2015, I wrote a library to [read and write RTF files](https://github.com/jstewmc/rtf). Unfortunately, I soon realized that some RTF files can be very large, too large to get and split as one string.
-
-## Contributing
-
-See [CONTRIBUTING.md](https://github.com/jstewmc/stream/blob/master/CONTRIBUTING.md) for details.
 
 ## Author
 
@@ -121,4 +96,4 @@ This library is released under the [MIT license](https://github.com/jstewmc/stre
 
 ## Version
 
-0.1.0 - See [CHANGELOG.md](https://github.com/jstewmc/stream/blob/master/CHANGELOG.md) for details.
+0.2.0 - Updated to using [Jstewmc\Chunker](https://github.com/jstewmc/chunker)

@@ -9,7 +9,15 @@
 			"email": "clayjs0@gmail.com"	
 		}
 	],
-	"require": {},
+	"repositories": [
+		{
+			"url": "https://github.com/jstewmc/chunker.git",
+			"type": "git"
+		}	
+	],
+	"require": {
+		"jstewmc/chunker": "dev-master"
+	},
 	"require-dev": {
 		"phpunit/phpunit": "4.2.*"
 	},
