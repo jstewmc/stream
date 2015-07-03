@@ -2,7 +2,7 @@
 
 Stream a very large text file or string character-by-character (multi-byte safe).
 
->>> _Heads up!_ I went ahead and released v0.1.0 because the upcoming v0.2.0 has major changes! Instead of trying to handle both the chunking and the splitting in this class, which was becoming a headache, I moved the chunking to my [Jstewmc\Chunker](https://github.com/jstewmc/chunker) library. As a result, the Chunker is now a dependency and has to be constructor-injected into this class.
+> _Heads up!_ I went ahead and released v0.1.0 because the upcoming v0.2.0 has major changes! Instead of trying to handle both the chunking and the splitting in this class, which was becoming a headache, I moved the chunking to my [Jstewmc\Chunker](https://github.com/jstewmc/chunker) library. As a result, the Chunker is now a dependency and has to be constructor-injected into this class.
 
 For example:
 
@@ -36,16 +36,15 @@ o
 o
 ```
 
-Of course, this example is trivial. But, you get the idea. The combination of the Chunker library and the Stream library allow you to loop or chunk your way through a very large file or very large string in a multi-byte safe way with ease.
+Of course, this example is trivial. But, you get the idea. The combination of the Chunker library and the Stream library allow you to walk or chunk your way through a very large text file or a very large string in an easy, low-memory, multi-byte-friendy way.
 
 ## Methodology
 
 Basically, the chunker library divides very large text files and very large strings into chunks (no surprise). As you move character-to-character in the stream, it get and splits the next or previous chunk in the background as needed.
 
-
 ## Chunker
 
-To learn more about instantiating and initializing a File or Text Chunker, see [Jstewmc\Chunker](https://github.com/jstewmc/chunker).
+See [Jstewmc\Chunker](https://github.com/jstewmc/chunker) for details on instantiating and initializing a File or Text Chunker, a constructor-injected dependency of this library.
 
 ## Stream
 
