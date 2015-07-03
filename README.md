@@ -48,7 +48,7 @@ See [Jstewmc\Chunker](https://github.com/jstewmc/chunker) for details on instant
 
 ## Stream
 
-Once a stream has been instantiated, you can get the stream's current, next, and previous characters using the `getCurrentCharacter()`, `getNextCharacter()`, and `getPreviousCharacter()` methods, respectively. For convenience, the methods are aliased as `current()`, `next()`, and `previous()` methods, respectively.
+Once a stream has been instantiated, you can get the stream's current, next, and previous characters using the `getCurrentCharacter()`, `getNextCharacter()`, and `getPreviousCharacter()` methods, respectively. For convenience, the methods are aliased as `current()`, `next()`, and `previous()`.
 
 ```php
 use Jstewmc\Chunker;
@@ -95,4 +95,8 @@ This library is released under the [MIT license](https://github.com/jstewmc/stre
 
 ## Version
 
-0.2.0 - Updated to using [Jstewmc\Chunker](https://github.com/jstewmc/chunker)
+### dev-master
+Update to using [Jstewmc\Chunker](https://github.com/jstewmc/chunker).
+
+### 0.1.0 - July 3, 2015
+Initial release
