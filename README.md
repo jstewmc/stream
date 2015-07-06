@@ -2,10 +2,6 @@
 
 Stream a very large text file or string character-by-character (multi-byte safe).
 
-> _Heads up!_ I went ahead and released v0.1.0 because the upcoming v0.2.0 has major changes! Instead of trying to handle both the chunking and the splitting in this class, which was becoming a headache, I moved the chunking to my [Jstewmc\Chunker](https://github.com/jstewmc/chunker) library. As a result, the Chunker is now a dependency and has to be constructor-injected into this class.
-
-For example:
-
 ```php
 use Jstewmc\Stream;
 use Jstewmc\Chunker;
@@ -95,8 +91,12 @@ This library is released under the [MIT license](https://github.com/jstewmc/stre
 
 ## Version
 
-### dev-master
-Update to using [Jstewmc\Chunker](https://github.com/jstewmc/chunker).
+### 0.2.1 - July 6, 2015
+
+- Duh. I forgot to include the changes to `composer.json`.
+
+### 0.2.0 - July 6, 2015
+- *Update to using [Jstewmc\Chunker](https://github.com/jstewmc/chunker).* Before, both the chunking and the splitting were handled in this class. However, it was becoming a headache. So, I moved the chunking to my [Jstewmc\Chunker](https://github.com/jstewmc/chunker) library, and the Chunker is now a constructor-injected dependency.
 
 ### 0.1.0 - July 3, 2015
 Initial release
