@@ -5,15 +5,17 @@
 	"keywords": ["PHP", "stream", "split", "file", "string", "character"],
 	"authors": [
 		{
-			"name": "Jack Clayton",
-			"email": "clayjs0@gmail.com"	
+			"name": "Jack Clayton and Contributors",
+			"homepage": "https://github.com/jstewmc/php-helpers/contributors"
 		}
 	],
 	"require": {
-		"jstewmc/chunker": "0.1.0"
+		"ext-mbstring": "*",
+		"php": "^7.4 || ^8.0",
+		"jstewmc/chunker": "0.2.0"
 	},
 	"require-dev": {
-		"phpunit/phpunit": "4.2.*"
+		"phpunit/phpunit": "^9"
 	},
 	"autoload": {
 		"psr-4": {
