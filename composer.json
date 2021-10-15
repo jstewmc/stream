@@ -15,6 +15,7 @@
 		"jstewmc/chunker": "0.2.0"
 	},
 	"require-dev": {
+		"mikey179/vfsstream": "^1.6",
 		"phpunit/phpunit": "^9"
 	},
 	"autoload": {
