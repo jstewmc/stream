@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.3.0] - 2021-10-15
 
-Version `0.2.0` includes a number of breaking changes, intended to make the library easier to use and maintain.
+Version `0.3.0` includes a number of breaking changes, intended to make the library easier to use and maintain.
 
 ### Removed
 
@@ -19,8 +19,8 @@ Version `0.2.0` includes a number of breaking changes, intended to make the libr
 ### Changed
 
 - Updated the library for PHP 7.4+ and PHP 8.
-- Changed `Stream` to an `abstract class` with `File` and `Text` implementations.
-- Changed constructor arguments to accept a `string` or `Chunker` instance. This simplifies instantiation, if you are happy using the chunker's default encoding and chunk size.
+- Changed `Stream` to an `abstract class` with `File` and `Text` implementations to make the source more intentional.
+- Changed constructor arguments to accept a `string` or `Chunker` instance. This simplifies instantiation, if you accept the chunker's default encoding and chunk size.
 - Modernized the classes with property type hints, argument type hints, return type hints, guard clauses, etc.
 - Changed `File` tests from using concrete files and folders to using a virtual file system with [bovigo/vfsStream](https://github.com/bovigo/vfsStream).
 - Updated from PHPUnit version 4 to version 9.
