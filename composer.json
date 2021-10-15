@@ -17,6 +17,7 @@
 	"require-dev": {
 		"mikey179/vfsstream": "^1.6",
 		"phpunit/phpunit": "^9",
+		"roave/security-advisories": "dev-latest",
 		"slevomat/coding-standard": "^6"
 	},
 	"autoload": {
