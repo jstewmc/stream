@@ -1,30 +1,25 @@
+[![CircleCI](https://circleci.com/gh/jstewmc/stream.svg?style=svg)](https://circleci.com/gh/jstewmc/stream) [![codecov](https://codecov.io/gh/jstewmc/stream/branch/master/graph/badge.svg?token=GxhdQr71JU)](https://codecov.io/gh/jstewmc/stream)
+
 # Stream
 
-Stream a very large text file or string character-by-character (multi-byte safe).
+_A multi-byte-safe stream for reading very large files (or strings) character-by-character._
+
+Reading very large files or strings into PHP's memory and exploding them for character-by-character processing - like parsing or lexing - can quickly overrun your process memory.
+
+This library streams the characters of very large text files in an easy, multi-byte, memory-safe manner:
 
 ```php
-use Jstewmc\Stream;
-use Jstewmc\Chunker;
+use Jstewmc\Stream\Text;
 
-// create an example file
-file_put_contents('example.txt', 'foo');
+$characters = new Text('foo');
 
-// create the chunker
-$chunker = new Chunker\File('example.txt');
-
-// create the stream
-$stream = new Stream($chunker);
-
-// while a current character exists
-while (false !== ($character = $stream->current())) {
-	// echo the current character to the screen
-	echo $character."\n";	
-	// advance to the next character
-	$stream->next();
+while (false !== ($character = $characters->current())) {
+	echo "{$character}\n";
+	$characters->next();
 }
 ```
 
-The example above would produce the following output:
+The (trivial) example above would produce the following output:
 
 ```
 f
@@ -32,71 +27,136 @@ o
 o
 ```
 
-Of course, this example is trivial. But, you get the idea. The combination of the Chunker library and the Stream library allow you to walk or chunk your way through a very large text file or a very large string in an easy, low-memory, multi-byte-friendy way.
+In the background, this library uses [jstewmc/chunker](https://github.com/jstewmc/chunker) to chunk very large text files or strings in a multi-byte, low-memory manner and moves between chunks as necessary.
 
-## Methodology
+## Installation
 
-Basically, the chunker library divides very large text files and very large strings into chunks (no surprise). As you move character-to-character in the stream, it get and splits the next or previous chunk in the background as needed.
+This library requires [PHP 7.4+](https://secure.php.net).
 
-## Chunker
+It is multi-platform, and we strive to make it run equally well on Windows, Linux, and OSX.
 
-See [Jstewmc\Chunker](https://github.com/jstewmc/chunker) for details on instantiating and initializing a File or Text Chunker, a constructor-injected dependency of this library.
+It should be installed via [Composer](https://getcomposer.org). To do so, add the following line to the `require` section of your `composer.json` file, and run `composer update`:
 
-## Stream
-
-Once a stream has been instantiated, you can get the stream's current, next, and previous characters using the `getCurrentCharacter()`, `getNextCharacter()`, and `getPreviousCharacter()` methods, respectively. For convenience, the methods are aliased as `current()`, `next()`, and `previous()`.
-
-```php
-use Jstewmc\Chunker;
-use Jstewmc\Stream;
-
-file_put_contents('example.txt', 'foo');
-
-$chunker = new Chunker\File('example.txt');
-
-$stream = new Stream($chunker);
-
-$stream->getCurrentCharacter();   // returns "f"
-$stream->getNextCharacter();      // returns "o"
-$stream->getPreviousCharacter();  // returns "f"
+```javascript
+{
+   "require": {
+       "jstewmc/stream": "^0.3"
+   }
+}
 ```
 
-The `getNextCharacter()` and `getPreviousCharacter()` methods behave like PHP's native `next()` and `prev()` methods. When called, they'll increment or decrement the internal pointer and return the corresponding character.
+## Usage
+
+### Instantiating a stream
+
+A stream can be instantiated as `Text` or `File`:
+
+```php
+use Jstewmc\Stream\{File, Text};
+
+$characters1 = new Text('foo');
+
+$characters2 = new File('/path/to/file.txt');
+```
+
+By default, a stream uses the environment's character encoding and a chunk size of around 8kb. If you need more control, you can instantiate a stream using a `Chunker` instance, instead of a string:
+
+```php
+use Jstewmc\{Chunker, Stream};
+
+$textChunks = new Chunker\Text('foo', 'UTF-8', 16384);
+$textCharacters = new Stream\Text($textChunks);
+
+$fileChunks = new Chunker\File('/path/to/file.txt', 'UTF-8', 65536);
+$fileCharacters = new Stream\File($fileChunks);
+```
+
+### Navigating a stream
+
+Once a stream has been instantiated, you can get the stream's current, next, and previous characters using the `getCurrentCharacter()`, `getNextCharacter()`, and `getPreviousCharacter()` methods, respectively. For convenience, the methods are aliased as `current()`, `next()`, and `previous()`:
+
+```php
+use Jstewmc\Stream\Text;
+
+$characters = new Text('foo');
+
+$characters->current();   // returns "f"
+
+$characters->next();      // returns "o"
+$characters->next();      // returns "o"
+$characters->next();      // returns false (because next does not exist)
+
+$characters->current();   // returns false
+
+$characters->previous();  // returns "o"
+$characters->previous();  // returns "o"
+$characters->previous();  // returns "f"
+$characters->previous();  // returns false (because previous does not exist)
+
+$characters->current();   // returns "f"
+```
+
+Typically, these methods will be combined in a `while` loop like so:
+
+```php
+// while characters exist
+while (false !== ($character = $characters->current())) {
+	// do something with the current character
+	echo "{$character}\n";
+	// advance to the next character for the next iteration
+	$characters->next();
+}
+```
 
 If you need to, you can reset the stream's internal pointer:
 
 ```php
-use Jstewmc\Chunker;
-use Jstewmc\Stream;
+use Jstewmc\Stream\Text;
 
-$chunker = new Chunker\Text('foo');
+$characters = new Text('foo');
 
-$stream = new Stream($chunker);
+$characters->current();  // returns "f"
+$characters->next();     // returns "o"
 
-$stream->getCurrentCharacter();  // returns "f"
-$stream->getNextCharacter();     // returns "o"
+$characters->reset();
 
-$stream->reset();
-
-$stream->getCurrentCharacter();  // returns "f"
+$characters->current();  // returns "f"
 ```
-
-## Author
-
-Jack Clayton - [clayjs0@gmail.com](mailto:clayjs0@gmail.com)
 
 ## License
 
-This library is released under the [MIT license](https://github.com/jstewmc/stream/blob/master/LICENSE).
+This library is released under the [MIT license](LICENSE).
 
-## Version
+## Contributing
 
-### 0.2.1 - July 6, 2015
+Contributions are welcome!
 
-- Duh. I forgot to include the changes to `composer.json`.
+Here are the steps to get started:
 
-### 0.2.0 - July 6, 2015
-- *Update to using [Jstewmc\Chunker](https://github.com/jstewmc/chunker).* Before, both the chunking and the splitting were handled in this class. However, it was becoming a headache. So, I moved the chunking to my [Jstewmc\Chunker](https://github.com/jstewmc/chunker) library, and the Chunker is now a constructor-injected dependency.
+```bash
+# Clone the repository (assuming you have Git installed).
+~/path/to $ git clone git@github.com:jstewmc/stream.git
 
-### 0.1.0 - July 3, 2015
-Initial release
+# Install dependencies (assuming you are using Composer locally).
+~/path/to/stream $ php composer.phar install
+
+# Run the tests.
+~/path/to/stream $ ./vendor/bin/phpunit
+
+# Create and checkout a new branch.
+~/path/to/stream $ git branch -c YOUR_BRANCH_NAME
+
+# Make your changes...
+
+# Run the tests again.
+~/path/to/stream $ ./vendor/bin/phpunit
+
+# Lint your changes.
+~/path/to/stream $ ./vendor/bin/phpcs .
+
+# Automatically fix any issues that arise.
+~/path/to/stream $ ./vendor/bin/phpcbf .
+
+# Push your changes to Github and create a pull request.
+~/path/to/stream $ git push origin YOUR_BRANCH_NAME
+```
