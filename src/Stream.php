@@ -11,6 +11,13 @@ abstract class Stream
      */
     private array $characters = [];
 
+    public function getCharacters(): array
+    {
+        return $this->characters;
+    }
+
+    private int $index = 0;
+
     /**
      * The stream's underlying chunker
      */
@@ -19,6 +26,13 @@ abstract class Stream
     public function __construct()
     {
         $this->readCurrentChunk();
+    }
+
+    private function readCurrentChunk(): void
+    {
+        $this->read($this->chunker->current());
+
+        $this->index = 0;
     }
 
     /**
@@ -31,11 +45,6 @@ abstract class Stream
         return $this->getCurrentCharacter();
     }
 
-    public function getCharacters(): array
-    {
-        return $this->characters;
-    }
-
     /**
      * Returns the current character
      *
@@ -43,59 +52,16 @@ abstract class Stream
      */
     public function getCurrentCharacter()
     {
-        return current($this->characters);
+        if (!$this->hasCurrentCharacter()) {
+            return false;
+        }
+
+        return $this->characters[$this->index];
     }
 
-    /**
-     * Returns the next character
-     *
-     * @return  string|false
-     */
-    public function getNextCharacter()
+    private function hasCurrentCharacter(): bool
     {
-        $next = next($this->characters);
-
-        if ($next !== false) {
-            return $next;
-        }
-
-        if ($this->chunker->hasNextChunk()) {
-            $this->readNextChunk();
-            $next = reset($this->characters);
-        }
-
-        return $next;
-    }
-
-    /**
-     * Returns the previous character
-     *
-     * @return  string|false
-     * @since   0.1.0
-     */
-    public function getPreviousCharacter()
-    {
-        $previous = prev($this->characters);
-
-        if ($previous !== false) {
-            return $previous;
-        }
-
-        if ($this->chunker->hasPreviousChunk()) {
-            $this->readPreviousChunk();
-            $previous = end($this->characters);
-        }
-
-        return $previous;
-    }
-
-    /**
-     * Returns true if the stream has one or more characters remaining
-     * (including the current character)
-     */
-    public function hasCharacters(): bool
-    {
-        return $this->current() !== false;
+        return array_key_exists($this->index, $this->characters);
     }
 
     /**
@@ -109,6 +75,42 @@ abstract class Stream
     }
 
     /**
+     * Returns the next character
+     *
+     * @return  string|false
+     */
+    public function getNextCharacter()
+    {
+        if ($this->hasNextCharacter()) {
+            $next = $this->characters[++$this->index];
+        } elseif ($this->hasNextChunk()) {
+            $this->readNextChunk();
+            $next = $this->characters[$this->index];
+        } else {
+            $next = false;
+        }
+
+        return $next;
+    }
+
+    private function hasNextChunk(): bool
+    {
+        return $this->chunker->hasNextChunk();
+    }
+
+    private function hasNextCharacter(): bool
+    {
+        return array_key_exists($this->index + 1, $this->characters);
+    }
+
+    private function readNextChunk(): void
+    {
+        $this->read($this->chunker->next());
+
+        $this->index = 0;
+    }
+
+    /**
      * An alias for the getPreviousCharacter() method
      *
      * @return  string|false
@@ -119,17 +121,53 @@ abstract class Stream
     }
 
     /**
+     * Returns the previous character
+     *
+     * @return  string|false
+     */
+    public function getPreviousCharacter()
+    {
+        if ($this->hasPreviousCharacter()) {
+            $previous = $this->characters[--$this->index];
+        } elseif ($this->hasPreviousChunk()) {
+            $this->readPreviousChunk();
+            $previous = $this->characters[$this->index];
+        } else {
+            $previous = false;
+        }
+
+        return $previous;
+    }
+
+    private function hasPreviousChunk(): bool
+    {
+        return $this->chunker->hasPreviousChunk();
+    }
+
+    private function hasPreviousCharacter(): bool
+    {
+        return array_key_exists($this->index - 1, $this->characters);
+    }
+
+    private function readPreviousChunk(): void
+    {
+        $this->read($this->chunker->previous());
+
+        $this->index = count($this->characters) - 1;
+    }
+
+    /**
      * Resets the stream's internal pointer
      */
     public function reset(): void
     {
+        $this->index = 0;
+
         $this->characters = [];
 
         $this->chunker->reset();
 
         $this->read($this->chunker->current());
-
-        return;
     }
 
     /**
@@ -144,21 +182,6 @@ abstract class Stream
         } else {
             $this->characters = [];
         }
-    }
-
-    private function readCurrentChunk(): void
-    {
-        $this->read($this->chunker->current());
-    }
-
-    private function readNextChunk(): void
-    {
-        $this->read($this->chunker->next());
-    }
-
-    private function readPreviousChunk(): void
-    {
-        $this->read($this->chunker->previous());
     }
 
     private function exists($chunk): bool
@@ -183,11 +206,6 @@ abstract class Stream
         return strlen($chunk) > 0;
     }
 
-    private function count(string $chunk): int
-    {
-        return mb_strlen($chunk, $this->chunker->getEncoding());
-    }
-
     private function explode(string $chunk): array
     {
         $characters = [];
@@ -206,5 +224,10 @@ abstract class Stream
         }
 
         return $characters;
+    }
+
+    private function count(string $chunk): int
+    {
+        return mb_strlen($chunk, $this->chunker->getEncoding());
     }
 }
