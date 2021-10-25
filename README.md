@@ -40,7 +40,7 @@ It should be installed via [Composer](https://getcomposer.org). To do so, add th
 ```javascript
 {
    "require": {
-       "jstewmc/stream": "^0.3"
+       "jstewmc/stream": "^0.4"
    }
 }
 ```
@@ -78,23 +78,24 @@ Once a stream has been instantiated, you can get the stream's current, next, and
 ```php
 use Jstewmc\Stream\Text;
 
-$characters = new Text('foo');
+$characters = new Text('bar');
 
-$characters->current();   // returns "f"
+$characters->current();   // returns "b"
 
-$characters->next();      // returns "o"
-$characters->next();      // returns "o"
+$characters->next();      // returns "a"
+$characters->next();      // returns "r"
 $characters->next();      // returns false (because next does not exist)
 
-$characters->current();   // returns false
+$characters->current();   // returns "r"
 
-$characters->previous();  // returns "o"
-$characters->previous();  // returns "o"
-$characters->previous();  // returns "f"
+$characters->previous();  // returns "a"
+$characters->previous();  // returns "b"
 $characters->previous();  // returns false (because previous does not exist)
 
-$characters->current();   // returns "f"
+$characters->current();   // returns "b"
 ```
+
+These methods are _idempotent_ (e.g., you can call `next()` multiple times at the end of the stream without losing the last current character), and the stream is _repeatable_ (e.g., you can call `previous()` from the end of the stream to navigate in the opposite direction).
 
 Typically, these methods will be combined in a `while` loop like so:
 

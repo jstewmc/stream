@@ -117,37 +117,6 @@ class TextTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('f', $stream->getPreviousCharacter());
     }
 
-    public function testHasCharactersReturnsFalseWhenTextIsEmpty(): void
-    {
-        $this->assertFalse((new Text(''))->hasCharacters());
-    }
-
-    public function testHasCharactersReturnsTrueWhenBeforeLastCharacter(): void
-    {
-        $this->assertTrue((new Text('foo'))->hasCharacters());
-    }
-
-    public function testHasCharactersReturnsTrueWhenOnLastCharacter(): void
-    {
-        $stream = new Text('foo');
-
-        $stream->next();
-        $stream->next();
-
-        $this->assertTrue($stream->hasCharacters());
-    }
-
-    public function testHasCharactersReturnsFalseWhenAfterLastCharacter(): void
-    {
-        $stream = new Text('foo');
-
-        $stream->next();
-        $stream->next();
-        $stream->next();
-
-        $this->assertFalse($stream->hasCharacters());
-    }
-
     public function testNextReturnsFalseWhenTextIsEmpty(): void
     {
         $this->assertFalse((new Text(''))->next());

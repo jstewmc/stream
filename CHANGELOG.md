@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2021-10-25
+
+### Added
+
+- Added _idempotency_ to navigation methods. You can call navigation methods like `next()` or `previous()` multiple times at the stream's endpoints without updating the internal pointer.
+
+### Changed
+
+- Reordered the methods in the `Stream` class to be grouped according to usage. Although this mixes `private` and `public` methods, it makes it easier to read without jumping around.
+
+### Removed
+
+- Removed the `hasCharacters()` method. This is not a particularly meaningful method, as it only checks whether or not a current character exists.
+
+### Fixed
+
+- Fixed [#2](https://github.com/jstewmc/stream/issues/2), where attempts to call `previous()` from the end of the string would return `false`.
+
 ## [0.3.0] - 2021-10-15
 
 Version `0.3.0` includes a number of breaking changes, intended to make the library easier to use and maintain.

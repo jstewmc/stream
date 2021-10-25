@@ -160,37 +160,6 @@ class FileTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testHasCharactersReturnsFalseWhenTextIsEmpty(): void
-    {
-        $this->assertFalse($this->blankStream()->hasCharacters());
-    }
-
-    public function testHasCharactersReturnsTrueWhenBeforeLastCharacter(): void
-    {
-        $this->assertTrue($this->presentStream()->hasCharacters());
-    }
-
-    public function testHasCharactersReturnsTrueWhenOnLastCharacter(): void
-    {
-        $stream = $this->presentStream();
-
-        $stream->next();
-        $stream->next();
-
-        $this->assertTrue($stream->hasCharacters());
-    }
-
-    public function testHasCharactersReturnsFalseWhenAfterLastCharacter(): void
-    {
-        $stream = $this->presentStream();
-
-        $stream->next();
-        $stream->next();
-        $stream->next();
-
-        $this->assertFalse($stream->hasCharacters());
-    }
-
     public function testNextReturnsFalseWhenTextIsEmpty(): void
     {
         $this->assertFalse($this->blankStream()->next());
@@ -277,7 +246,6 @@ class FileTest extends \PHPUnit\Framework\TestCase
     /**
      * A blank string is, well, blank (e.g., "")
      */
-
     private function blankFile(): vfsStreamFile
     {
         return vfsStream::newFile('example.txt')->at($this->root);
