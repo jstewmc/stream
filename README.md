@@ -148,7 +148,8 @@ Here are the steps to get started:
 # Create and checkout a new branch.
 ~/path/to/stream $ git checkout -b YOUR_BRANCH_NAME
 
-# Make your changes (and add tests with 95%+ coverage)...
+# Make your changes (be sure to add tests with 95%+ coverage and describe your
+# changes in the CHANGELOG's "Unreleased" section).
 
 # Run the tests.
 ~/path/to/stream $ ./vendor/bin/phpunit
