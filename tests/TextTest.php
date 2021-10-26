@@ -252,4 +252,49 @@ class TextTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('ar', $stream->peek(999));
         $this->assertEquals('b', $stream->current());
     }
+
+    public function testIsOnReturnsFalseWhenTextIsEmpty(): void
+    {
+        $this->assertFalse((new Text(''))->isOn('a'));
+    }
+
+    public function testIsOnReturnsFalseWhenTextIsNotOnCharacter(): void
+    {
+        $this->assertFalse((new Text('foo'))->isOn('a'));
+    }
+
+    public function testIsOnReturnsFalseWhenTextIsNotOnString(): void
+    {
+        $this->assertFalse((new Text('foo'))->isOn('bar'));
+    }
+
+    public function testIsOnReturnsTrueWhenTextIsOnCharacter(): void
+    {
+        $this->assertTrue((new Text('foo'))->isOn('f'));
+    }
+
+    public function testIsOnReturnsTrueWhenTextIsOnString(): void
+    {
+        $this->assertTrue((new Text('foo'))->isOn('foo'));
+    }
+
+    public function testIsOnReturnsFalseWhenTextIsNotInArrayOfCharacters(): void
+    {
+        $this->assertFalse((new Text('foo'))->isOn(['b', 'a', 'r']));
+    }
+
+    public function testIsOnReturnsFalseWhenTextIsNotInArrayOfStrings(): void
+    {
+        $this->assertFalse((new Text('foo'))->isOn(['bar', 'baz', 'qux']));
+    }
+
+    public function testIsOnReturnsTrueWhenTextIsInArrayOfCharacters(): void
+    {
+        $this->assertTrue((new Text('foo'))->isOn(['a', 'b', 'c', 'd', 'e', 'f']));
+    }
+
+    public function testIsOnReturnsTrueWhenTextIsInArrayOfStrings(): void
+    {
+        $this->assertTrue((new Text('foo'))->isOn(['foo', 'bar', 'baz']));
+    }
 }

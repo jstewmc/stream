@@ -214,6 +214,48 @@ abstract class Stream
     }
 
     /**
+     * Returns true if the stream is "on" the $search(es) (includes the current
+     * character)
+     */
+    public function isOn($search): bool
+    {
+        if (is_string($search)) {
+            $isOn = $this->isOnString($search);
+        } elseif (is_array($search)) {
+            $isOn = $this->isOnArray($search);
+        } else {
+            throw new \InvalidArgumentException(
+                'search should be a string or array of strings'
+            );
+        }
+
+        return $isOn;
+    }
+
+    private function isOnString(string $search): bool
+    {
+        $subject = $this->current();
+
+        $n = mb_strlen($search, $this->chunker->getEncoding()) - 1;
+        if ($n > 0) {
+            $subject .= $this->peek($n);
+        }
+
+        return $subject === $search;
+    }
+
+    private function isOnArray(array $searches): bool
+    {
+        foreach ($searches as $search) {
+            if ($this->isOnString($search)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Resets the stream's internal pointer
      */
     public function reset(): void

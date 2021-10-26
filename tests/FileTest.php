@@ -311,6 +311,51 @@ class FileTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('f', $stream->current());
     }
 
+    public function testIsOnReturnsFalseWhenTextIsBlank(): void
+    {
+        $this->assertFalse($this->blankStream()->isOn('a'));
+    }
+
+    public function testIsOnReturnsFalseWhenTextIsNotOnCharacter(): void
+    {
+        $this->assertFalse($this->presentStream()->isOn('a'));
+    }
+
+    public function testIsOnReturnsFalseWhenTextIsNotOnString(): void
+    {
+        $this->assertFalse($this->presentStream()->isOn('bar'));
+    }
+
+    public function testIsOnReturnsTrueWhenTextIsOnCharacter(): void
+    {
+        $this->assertTrue($this->presentStream()->isOn('f'));
+    }
+
+    public function testIsOnReturnsTrueWhenTextIsOnString(): void
+    {
+        $this->assertTrue($this->presentStream()->isOn('foo'));
+    }
+
+    public function testIsOnReturnsFalseWhenTextIsNotInArrayOfCharacters(): void
+    {
+        $this->assertFalse($this->presentStream()->isOn(['b', 'a', 'r']));
+    }
+
+    public function testIsOnReturnsFalseWhenTextIsNotInArrayOfStrings(): void
+    {
+        $this->assertFalse($this->presentStream()->isOn(['bar', 'baz', 'qux']));
+    }
+
+    public function testIsOnReturnsTrueWhenTextIsInArrayOfCharacters(): void
+    {
+        $this->assertTrue($this->presentStream()->isOn(['a', 'b', 'c', 'd', 'e', 'f']));
+    }
+
+    public function testIsOnReturnsTrueWhenTextIsInArrayOfStrings(): void
+    {
+        $this->assertTrue($this->presentStream()->isOn(['foo', 'bar', 'baz']));
+    }
+
     /**
      * A blank string is, well, blank (e.g., "")
      */

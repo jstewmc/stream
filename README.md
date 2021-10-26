@@ -111,6 +111,46 @@ while (false !== $characters->current()) {
 
 Keep in mind, these methods are _idempotent_ and _repeatable_. For example, you can call `next()` multiple times at the end of the stream without proceeding past the end of the stream, and you can call `previous()` from the end of the stream to navigate in the opposite direction.
 
+### Peaking ahead
+
+You can use the `peek()` method to look ahead to the next _n_ characters without updating the internal index:
+
+```php
+use Jstewmc\Stream\Text;
+
+$characters = new Text('foo');
+
+$characters->current();  // returns "f"
+$characters->peek();     // returns "o"
+$characters->peek(2);    // returns "oo"
+$characters->peek(3);    // returns "oo"
+$characters->current();  // returns "f"
+```
+
+### Testing the content
+
+You can use the `isOn()` method to test whether or not the stream is on a string or array of strings (includes the current character):
+
+```php
+use Jstewmc\Stream\Text;
+
+$characters = new Text('foo');
+
+$characters->isOn('f');  // returns true
+$characters->isOn('b');  // returns false
+
+$characters->isOn('foo');  // returns true
+$characters->isOn('bar');  // returns false
+
+$characters->isOn(['f', 'a', 'b']);  // returns true ("f" matches)
+$characters->isOn(['b', 'a', 'r']);  // returns false
+
+$characters->isOn(['foo', 'bar', 'baz']);  // returns true ("foo" matches)
+$characters->isOn(['bar', 'baz', 'qux']);  // returns false
+```
+
+### Resetting the stream
+
 If you need to, you can reset the stream's internal pointer:
 
 ```php
