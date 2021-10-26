@@ -184,4 +184,72 @@ class TextTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals('f', $stream->current());
     }
+
+    public function testPeekThrowsInvalidArgumentExceptionWhenNIsNegative(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        (new Text('foo'))->peek(-1);
+    }
+
+    public function testPeekThrowsInvalidArgumentExceptionWhenNIsZero(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        (new Text('foo'))->peek(0);
+    }
+
+    public function testPeekReturnsStringWhenTextIsEmpty(): void
+    {
+        $this->assertEquals('', (new Text(''))->peek());
+    }
+
+    public function testPeekReturnsStringWhenOnLastCharacter(): void
+    {
+        $stream = new Text('bar');
+
+        $stream->next(); // returns "a"
+        $stream->next(); // returns "r"
+
+        $this->assertEquals('', $stream->peek());
+    }
+
+    public function testPeekReturnsStringWhenAfterLastCharacter(): void
+    {
+        $stream = new Text('bar');
+
+        $stream->next();  // returns "a"
+        $stream->next();  // returns "r"
+        $stream->next();  // returns false
+
+        $this->assertEquals('', $stream->peek());
+    }
+
+    public function testPeekReturnsStringWhenNIsPositive(): void
+    {
+        $this->assertEquals('ar', (new Text('bar'))->peek(2));
+    }
+
+    public function testPeekDoesNotChangeIndexWhenNIsPositive(): void
+    {
+        $stream = new Text('bar');
+
+        $this->assertEquals('b', $stream->current());
+        $this->assertEquals('ar', $stream->peek(2));
+        $this->assertEquals('b', $stream->current());
+    }
+
+    public function testPeekReturnsStringWhenNIsLongerThanText(): void
+    {
+        $this->assertEquals('ar', (new Text('bar'))->peek(999));
+    }
+
+    public function testPeekDoesNotChangeIndexWhenNIsLongerThanText(): void
+    {
+        $stream = new Text('bar');
+
+        $this->assertEquals('b', $stream->current());
+        $this->assertEquals('ar', $stream->peek(999));
+        $this->assertEquals('b', $stream->current());
+    }
 }

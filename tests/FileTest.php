@@ -243,6 +243,74 @@ class FileTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($this->presentCharacter1(), $stream->current());
     }
 
+    public function testPeekThrowsInvalidArgumentExceptionWhenNIsNegative(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $this->presentStream()->peek(-1);
+    }
+
+    public function testPeekThrowsInvalidArgumentExceptionWhenNIsZero(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $this->presentStream()->peek(0);
+    }
+
+    public function testPeekReturnsStringWhenTextIsEmpty(): void
+    {
+        $this->assertEquals('', $this->blankStream()->peek());
+    }
+
+    public function testPeekReturnsStringWhenOnLastCharacter(): void
+    {
+        $stream = $this->presentStream();
+
+        $stream->next();
+        $stream->next();
+
+        $this->assertEquals('', $stream->peek());
+    }
+
+    public function testPeekReturnsStringWhenAfterLastCharacter(): void
+    {
+        $stream = $this->presentStream();
+
+        $stream->next();
+        $stream->next();
+        $stream->next();
+
+        $this->assertEquals('', $stream->peek());
+    }
+
+    public function testPeekReturnsStringWhenNIsPositive(): void
+    {
+        $this->assertEquals('oo', $this->presentStream()->peek(2));
+    }
+
+    public function testPeekDoesNotChangeIndexWhenNIsPositive(): void
+    {
+        $stream = $this->presentStream();
+
+        $this->assertEquals('f', $stream->current());
+        $this->assertEquals('oo', $stream->peek(2));
+        $this->assertEquals('f', $stream->current());
+    }
+
+    public function testPeekReturnsStringWhenNIsLongerThanText(): void
+    {
+        $this->assertEquals('oo', $this->presentStream()->peek(999));
+    }
+
+    public function testPeekDoesNotChangeIndexWhenNIsLongerThanText(): void
+    {
+        $stream = $this->presentStream();
+
+        $this->assertEquals('f', $stream->current());
+        $this->assertEquals('oo', $stream->peek(999));
+        $this->assertEquals('f', $stream->current());
+    }
+
     /**
      * A blank string is, well, blank (e.g., "")
      */

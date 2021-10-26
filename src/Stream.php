@@ -184,6 +184,36 @@ abstract class Stream
     }
 
     /**
+     * Peeks the next $n characters without changing the index
+     */
+    public function peek(int $n = 1): string
+    {
+        if ($n <= 0) {
+            throw new \InvalidArgumentException(
+                'n must be a positive, non-zero integer'
+            );
+        }
+
+        $characters = '';
+
+        for ($i = 0; $i < $n; ++$i) {
+            $character = $this->next();
+            if ($character === false) {
+                $this->previous();
+                break;
+            }
+            $characters .= $character;
+        }
+
+        while ($i > 0) {
+            $this->previous();
+            --$i;
+        }
+
+        return $characters;
+    }
+
+    /**
      * Resets the stream's internal pointer
      */
     public function reset(): void
