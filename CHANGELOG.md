@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed [#4](https://github.com/jstewmc/stream/issues/4), where the `current()` method never returned false when the stream had advanced after the last character or before the first one. 
+
 ## [0.4.0] - 2021-10-25
 
 ### Added
