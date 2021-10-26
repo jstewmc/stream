@@ -12,19 +12,23 @@ class SystemTest extends \PHPUnit\Framework\TestCase
             $stream->next();
         }
 
-        $this->assertEquals('r', $stream->current());
+        $this->assertFalse($stream->current());
 
+        $this->assertEquals('r', $stream->previous());
         while (false !== $stream->previous()) {
             $stream->previous();
         }
 
-        $this->assertEquals('b', $stream->current());
+        $this->assertFalse($stream->current());
 
+        $this->assertEquals('b', $stream->next());
         while (false !== $stream->next()) {
             $stream->next();
         }
 
-        $this->assertEquals('r', $stream->current());
+        $this->assertFalse($stream->current());
+
+        $this->assertEquals('r', $stream->previous());
     }
 
     public function testStreamIsIdempotentAtEnd(): void
@@ -39,7 +43,8 @@ class SystemTest extends \PHPUnit\Framework\TestCase
             $stream->next();
         }
 
-        $this->assertEquals('r', $stream->current());
+        $this->assertFalse($stream->current());
+        $this->assertEquals('r', $stream->previous());
     }
 
     public function testStreamIsIdempotentAtBeginning(): void
@@ -50,6 +55,27 @@ class SystemTest extends \PHPUnit\Framework\TestCase
             $stream->previous();
         }
 
+        $this->assertFalse($stream->current());
+        $this->assertEquals('b', $stream->next());
+    }
+
+    public function testExampleIsCorrect(): void
+    {
+        $stream = new Text('bar');
+
         $this->assertEquals('b', $stream->current());
+
+        $this->assertEquals('a', $stream->next());
+        $this->assertEquals('r', $stream->next());
+        $this->assertFalse($stream->next());
+
+        $this->assertFalse($stream->current());
+
+        $this->assertEquals('r', $stream->previous());
+        $this->assertEquals('a', $stream->previous());
+        $this->assertEquals('b', $stream->previous());
+        $this->assertFalse($stream->previous());
+
+        $this->assertFalse($stream->current());
     }
 }
