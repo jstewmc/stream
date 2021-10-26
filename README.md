@@ -129,24 +129,38 @@ $characters->current();  // returns "f"
 
 ### Testing the content
 
-You can use the `isOn()` method to test whether or not the stream is on a string or array of strings (includes the current character):
+You can use the `isOn()` method to test whether or not the stream is on a string or includes one of an array of strings:
 
 ```php
 use Jstewmc\Stream\Text;
 
 $characters = new Text('foo');
 
-$characters->isOn('f');  // returns true
+$characters->isOn('f');  // returns true (because the current character is "f")
 $characters->isOn('b');  // returns false
 
 $characters->isOn('foo');  // returns true
 $characters->isOn('bar');  // returns false
 
-$characters->isOn(['f', 'a', 'b']);  // returns true ("f" matches)
+$characters->isOn(['f', 'a', 'b']);  // returns true (because "f" matches)
 $characters->isOn(['b', 'a', 'r']);  // returns false
 
-$characters->isOn(['foo', 'bar', 'baz']);  // returns true ("foo" matches)
+$characters->isOn(['foo', 'bar', 'baz']);  // returns true (because "foo" matches)
 $characters->isOn(['bar', 'baz', 'qux']);  // returns false
+```
+
+You can use the `isOnRegex()` method to test whether or not a number of characters match the given regular expression (rather than attempt to detect the number of characters in the regular expression, which would be very difficult, the number of characters to search is the second argument):
+
+```php
+use Jstewmc\Stream\Text;
+
+$characters = new Text('foo');
+
+$characters->isOnRegex('/f/');  // returns true
+$characters->isOnRegex('/b/');  // returns false
+
+$characters->isOnRegex('/foo/', 3);  // returns true
+$characters->isOnRegex('/bar/', 3);  // returns false
 ```
 
 ### Resetting the stream

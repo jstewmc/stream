@@ -356,6 +356,35 @@ class FileTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($this->presentStream()->isOn(['foo', 'bar', 'baz']));
     }
 
+    public function testIsOnRegexThrowsExceptionWhenLengthIsNegative(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $this->presentStream()->isOnRegex('/[a-z]/', -1);
+    }
+
+    public function testIsOnRegexThrowsExceptionWhenLengthIsZero(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $this->presentStream()->isOnRegex('/[a-z]/', 0);
+    }
+
+    public function testIsOnRegexReturnsFalseWhenTextIsBlank(): void
+    {
+        $this->assertFalse($this->blankStream()->isOnRegex('/[a-z]/'));
+    }
+
+    public function testIsOnRegexReturnsFalseWhenTextIsNotOnPattern(): void
+    {
+        $this->assertFalse($this->presentStream()->isOnRegex('/bar/'));
+    }
+
+    public function testIsOnRegexReturnsTrueWhenTextIsOnPattern(): void
+    {
+        $this->assertTrue($this->presentStream()->isOnRegex('/foo/', 3));
+    }
+
     /**
      * A blank string is, well, blank (e.g., "")
      */

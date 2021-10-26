@@ -297,4 +297,33 @@ class TextTest extends \PHPUnit\Framework\TestCase
     {
         $this->assertTrue((new Text('foo'))->isOn(['foo', 'bar', 'baz']));
     }
+
+    public function testIsOnRegexThrowsExceptionWhenLengthIsNegative(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        (new Text(''))->isOnRegex('/[a-z]/', -1);
+    }
+
+    public function testIsOnRegexThrowsExceptionWhenLengthIsZero(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        (new Text(''))->isOnRegex('/[a-z]/', 0);
+    }
+
+    public function testIsOnRegexReturnsFalseWhenTextIsBlank(): void
+    {
+        $this->assertFalse((new Text(''))->isOnRegex('/[a-z]/'));
+    }
+
+    public function testIsOnRegexReturnsFalseWhenTextIsNotOnPattern(): void
+    {
+        $this->assertFalse((new Text('foo'))->isOnRegex('/bar/'));
+    }
+
+    public function testIsOnRegexReturnsTrueWhenTextIsOnPattern(): void
+    {
+        $this->assertTrue((new Text('foo'))->isOnRegex('/foo/', 3));
+    }
 }

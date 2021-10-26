@@ -256,6 +256,28 @@ abstract class Stream
     }
 
     /**
+     * A `$length` argument is required, because we need to know how many
+     * characters to get for the comparison.
+     */
+    public function isOnRegex(string $pattern, int $length = 1): bool
+    {
+        if ($length <= 0) {
+            throw new \InvalidArgumentException(
+                'limit must be a positive, non-zero integer'
+            );
+        }
+
+        $subject = $this->current();
+
+        $n = $length - 1;
+        if ($n > 0) {
+            $subject .= $this->peek($n);
+        }
+
+        return preg_match($pattern, $subject);
+    }
+
+    /**
      * Resets the stream's internal pointer
      */
     public function reset(): void
