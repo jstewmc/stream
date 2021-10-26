@@ -184,4 +184,146 @@ class TextTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals('f', $stream->current());
     }
+
+    public function testPeekThrowsInvalidArgumentExceptionWhenNIsNegative(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        (new Text('foo'))->peek(-1);
+    }
+
+    public function testPeekThrowsInvalidArgumentExceptionWhenNIsZero(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        (new Text('foo'))->peek(0);
+    }
+
+    public function testPeekReturnsStringWhenTextIsEmpty(): void
+    {
+        $this->assertEquals('', (new Text(''))->peek());
+    }
+
+    public function testPeekReturnsStringWhenOnLastCharacter(): void
+    {
+        $stream = new Text('bar');
+
+        $stream->next(); // returns "a"
+        $stream->next(); // returns "r"
+
+        $this->assertEquals('', $stream->peek());
+    }
+
+    public function testPeekReturnsStringWhenAfterLastCharacter(): void
+    {
+        $stream = new Text('bar');
+
+        $stream->next();  // returns "a"
+        $stream->next();  // returns "r"
+        $stream->next();  // returns false
+
+        $this->assertEquals('', $stream->peek());
+    }
+
+    public function testPeekReturnsStringWhenNIsPositive(): void
+    {
+        $this->assertEquals('ar', (new Text('bar'))->peek(2));
+    }
+
+    public function testPeekDoesNotChangeIndexWhenNIsPositive(): void
+    {
+        $stream = new Text('bar');
+
+        $this->assertEquals('b', $stream->current());
+        $this->assertEquals('ar', $stream->peek(2));
+        $this->assertEquals('b', $stream->current());
+    }
+
+    public function testPeekReturnsStringWhenNIsLongerThanText(): void
+    {
+        $this->assertEquals('ar', (new Text('bar'))->peek(999));
+    }
+
+    public function testPeekDoesNotChangeIndexWhenNIsLongerThanText(): void
+    {
+        $stream = new Text('bar');
+
+        $this->assertEquals('b', $stream->current());
+        $this->assertEquals('ar', $stream->peek(999));
+        $this->assertEquals('b', $stream->current());
+    }
+
+    public function testIsOnReturnsFalseWhenTextIsEmpty(): void
+    {
+        $this->assertFalse((new Text(''))->isOn('a'));
+    }
+
+    public function testIsOnReturnsFalseWhenTextIsNotOnCharacter(): void
+    {
+        $this->assertFalse((new Text('foo'))->isOn('a'));
+    }
+
+    public function testIsOnReturnsFalseWhenTextIsNotOnString(): void
+    {
+        $this->assertFalse((new Text('foo'))->isOn('bar'));
+    }
+
+    public function testIsOnReturnsTrueWhenTextIsOnCharacter(): void
+    {
+        $this->assertTrue((new Text('foo'))->isOn('f'));
+    }
+
+    public function testIsOnReturnsTrueWhenTextIsOnString(): void
+    {
+        $this->assertTrue((new Text('foo'))->isOn('foo'));
+    }
+
+    public function testIsOnReturnsFalseWhenTextIsNotInArrayOfCharacters(): void
+    {
+        $this->assertFalse((new Text('foo'))->isOn(['b', 'a', 'r']));
+    }
+
+    public function testIsOnReturnsFalseWhenTextIsNotInArrayOfStrings(): void
+    {
+        $this->assertFalse((new Text('foo'))->isOn(['bar', 'baz', 'qux']));
+    }
+
+    public function testIsOnReturnsTrueWhenTextIsInArrayOfCharacters(): void
+    {
+        $this->assertTrue((new Text('foo'))->isOn(['a', 'b', 'c', 'd', 'e', 'f']));
+    }
+
+    public function testIsOnReturnsTrueWhenTextIsInArrayOfStrings(): void
+    {
+        $this->assertTrue((new Text('foo'))->isOn(['foo', 'bar', 'baz']));
+    }
+
+    public function testIsOnRegexThrowsExceptionWhenLengthIsNegative(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        (new Text(''))->isOnRegex('/[a-z]/', -1);
+    }
+
+    public function testIsOnRegexThrowsExceptionWhenLengthIsZero(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        (new Text(''))->isOnRegex('/[a-z]/', 0);
+    }
+
+    public function testIsOnRegexReturnsFalseWhenTextIsBlank(): void
+    {
+        $this->assertFalse((new Text(''))->isOnRegex('/[a-z]/'));
+    }
+
+    public function testIsOnRegexReturnsFalseWhenTextIsNotOnPattern(): void
+    {
+        $this->assertFalse((new Text('foo'))->isOnRegex('/bar/'));
+    }
+
+    public function testIsOnRegexReturnsTrueWhenTextIsOnPattern(): void
+    {
+        $this->assertTrue((new Text('foo'))->isOnRegex('/foo/', 3));
+    }
 }

@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.2] - 2021-10-26
+
+### Added
+
+- Added the `peek()` method to look at the next _n_ characters without changing the internal index.
+- Added the `isOn()` and `isOnRegex()` methods to test whether or not the current character (and, potentially, next characters) match a given string or an array of strings.
+
 ## [0.4.1] - 2021-10-26
 
 ### Fixed

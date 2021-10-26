@@ -184,6 +184,100 @@ abstract class Stream
     }
 
     /**
+     * Peeks the next $n characters without changing the index
+     */
+    public function peek(int $n = 1): string
+    {
+        if ($n <= 0) {
+            throw new \InvalidArgumentException(
+                'n must be a positive, non-zero integer'
+            );
+        }
+
+        $characters = '';
+
+        for ($i = 0; $i < $n; ++$i) {
+            $character = $this->next();
+            if ($character === false) {
+                $this->previous();
+                break;
+            }
+            $characters .= $character;
+        }
+
+        while ($i > 0) {
+            $this->previous();
+            --$i;
+        }
+
+        return $characters;
+    }
+
+    /**
+     * Returns true if the stream is "on" the $search(es) (includes the current
+     * character)
+     */
+    public function isOn($search): bool
+    {
+        if (is_string($search)) {
+            $isOn = $this->isOnString($search);
+        } elseif (is_array($search)) {
+            $isOn = $this->isOnArray($search);
+        } else {
+            throw new \InvalidArgumentException(
+                'search should be a string or array of strings'
+            );
+        }
+
+        return $isOn;
+    }
+
+    private function isOnString(string $search): bool
+    {
+        $subject = $this->current();
+
+        $n = mb_strlen($search, $this->chunker->getEncoding()) - 1;
+        if ($n > 0) {
+            $subject .= $this->peek($n);
+        }
+
+        return $subject === $search;
+    }
+
+    private function isOnArray(array $searches): bool
+    {
+        foreach ($searches as $search) {
+            if ($this->isOnString($search)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * A `$length` argument is required, because we need to know how many
+     * characters to get for the comparison.
+     */
+    public function isOnRegex(string $pattern, int $length = 1): bool
+    {
+        if ($length <= 0) {
+            throw new \InvalidArgumentException(
+                'limit must be a positive, non-zero integer'
+            );
+        }
+
+        $subject = $this->current();
+
+        $n = $length - 1;
+        if ($n > 0) {
+            $subject .= $this->peek($n);
+        }
+
+        return preg_match($pattern, $subject);
+    }
+
+    /**
      * Resets the stream's internal pointer
      */
     public function reset(): void
