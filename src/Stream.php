@@ -16,6 +16,9 @@ abstract class Stream
         return $this->characters;
     }
 
+    /**
+     * The current chunk's index
+     */
     private int $index = 0;
 
     /**
@@ -56,6 +59,10 @@ abstract class Stream
             return false;
         }
 
+        if ($this->isBeforeFirst() || $this->isAfterLast()) {
+            return false;
+        }
+
         return $this->characters[$this->index];
     }
 
@@ -81,12 +88,17 @@ abstract class Stream
      */
     public function getNextCharacter()
     {
+        if ($this->isAfterLast()) {
+            return false;
+        }
+
         if ($this->hasNextCharacter()) {
             $next = $this->characters[++$this->index];
         } elseif ($this->hasNextChunk()) {
             $this->readNextChunk();
             $next = $this->characters[$this->index];
         } else {
+            ++$this->index;
             $next = false;
         }
 
@@ -110,6 +122,11 @@ abstract class Stream
         $this->index = 0;
     }
 
+    private function isAfterLast(): bool
+    {
+        return $this->index === count($this->characters);
+    }
+
     /**
      * An alias for the getPreviousCharacter() method
      *
@@ -127,12 +144,17 @@ abstract class Stream
      */
     public function getPreviousCharacter()
     {
+        if ($this->isBeforeFirst()) {
+            return false;
+        }
+
         if ($this->hasPreviousCharacter()) {
             $previous = $this->characters[--$this->index];
         } elseif ($this->hasPreviousChunk()) {
             $this->readPreviousChunk();
             $previous = $this->characters[$this->index];
         } else {
+            --$this->index;
             $previous = false;
         }
 
@@ -154,6 +176,11 @@ abstract class Stream
         $this->read($this->chunker->previous());
 
         $this->index = count($this->characters) - 1;
+    }
+
+    private function isBeforeFirst(): bool
+    {
+        return $this->index < 0;
     }
 
     /**

@@ -13,8 +13,8 @@ use Jstewmc\Stream\Text;
 
 $characters = new Text('foo');
 
-while (false !== ($character = $characters->current())) {
-	echo "{$character}\n";
+while (false !== $characters->current()) {
+	echo "{$characters->current()}\n";
 	$characters->next();
 }
 ```
@@ -54,9 +54,9 @@ A stream can be instantiated as `Text` or `File`:
 ```php
 use Jstewmc\Stream\{File, Text};
 
-$characters1 = new Text('foo');
+$textCharacters = new Text('foo');
 
-$characters2 = new File('/path/to/file.txt');
+$fileCharacters = new File('/path/to/file.txt');
 ```
 
 By default, a stream uses the environment's character encoding and a chunk size of around 8kb. If you need more control, you can instantiate a stream using a `Chunker` instance, instead of a string:
@@ -64,16 +64,16 @@ By default, a stream uses the environment's character encoding and a chunk size 
 ```php
 use Jstewmc\{Chunker, Stream};
 
-$textChunks = new Chunker\Text('foo', 'UTF-8', 16384);
+$textChunks = new Chunker\Text('foo', 'UTF-8', 16384 /* characters */);
 $textCharacters = new Stream\Text($textChunks);
 
-$fileChunks = new Chunker\File('/path/to/file.txt', 'UTF-8', 65536);
+$fileChunks = new Chunker\File('/path/to/file.txt', 'UTF-8', 65536 /* bytes */);
 $fileCharacters = new Stream\File($fileChunks);
 ```
 
 ### Navigating a stream
 
-Once a stream has been instantiated, you can get the stream's current, next, and previous characters using the `getCurrentCharacter()`, `getNextCharacter()`, and `getPreviousCharacter()` methods, respectively. For convenience, the methods are aliased as `current()`, `next()`, and `previous()`:
+Once a stream has been instantiated, you can get the stream's current, next, and previous characters using the `getCurrentCharacter()`, `getNextCharacter()`, and `getPreviousCharacter()` methods, respectively (these methods are aliased as `current()`, `next()`, and `previous()`, respectively, and they will return `false` if the character does not exist):
 
 ```php
 use Jstewmc\Stream\Text;
@@ -84,30 +84,32 @@ $characters->current();   // returns "b"
 
 $characters->next();      // returns "a"
 $characters->next();      // returns "r"
-$characters->next();      // returns false (because next does not exist)
+$characters->next();      // returns false
 
-$characters->current();   // returns "r"
+$characters->current();   // returns false
 
+$characters->previous();  // returns "r"
 $characters->previous();  // returns "a"
 $characters->previous();  // returns "b"
-$characters->previous();  // returns false (because previous does not exist)
+$characters->previous();  // returns false
 
-$characters->current();   // returns "b"
+$characters->current();   // returns false
 ```
 
-These methods are _idempotent_ (e.g., you can call `next()` multiple times at the end of the stream without losing the last current character), and the stream is _repeatable_ (e.g., you can call `previous()` from the end of the stream to navigate in the opposite direction).
-
-Typically, these methods will be combined in a `while` loop like so:
+These methods will typically be combined in a `while` loop like so:
 
 ```php
-// while characters exist
-while (false !== ($character = $characters->current())) {
-	// do something with the current character
-	echo "{$character}\n";
-	// advance to the next character for the next iteration
+use Jstewmc\Stream\Text;
+
+$characters = new Text('bar');
+
+while (false !== $characters->current()) {
+	echo "{$characters->current()}\n";
 	$characters->next();
 }
 ```
+
+Keep in mind, these methods are _idempotent_ and _repeatable_. For example, you can call `next()` multiple times at the end of the stream without proceeding past the end of the stream, and you can call `previous()` from the end of the stream to navigate in the opposite direction.
 
 If you need to, you can reset the stream's internal pointer:
 
@@ -116,7 +118,6 @@ use Jstewmc\Stream\Text;
 
 $characters = new Text('foo');
 
-$characters->current();  // returns "f"
 $characters->next();     // returns "o"
 
 $characters->reset();
@@ -145,11 +146,11 @@ Here are the steps to get started:
 ~/path/to/stream $ ./vendor/bin/phpunit
 
 # Create and checkout a new branch.
-~/path/to/stream $ git branch -c YOUR_BRANCH_NAME
+~/path/to/stream $ git checkout -b YOUR_BRANCH_NAME
 
-# Make your changes...
+# Make your changes (and add tests with 95%+ coverage)...
 
-# Run the tests again.
+# Run the tests.
 ~/path/to/stream $ ./vendor/bin/phpunit
 
 # Lint your changes.
